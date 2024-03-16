@@ -7,13 +7,11 @@ import controller.Quiz;
 
 public class TelaQuiz extends JFrame {
     /*Aqui é onde to criando a função pra renderizar a tela que vai ter o questionário.
-    Ela já renderiza o título do questionário , as perguntas e alternativas. Falta pensar numa lógica para fazer
-    a correção das respostas
+    Ela já renderiza o título do questionário , as perguntas e alternativas
      */
     TelaQuiz(Quiz quiz) throws UnsupportedEncodingException {
         setTitle(quiz.getTitle());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setVisible(true);
@@ -25,6 +23,7 @@ public class TelaQuiz extends JFrame {
 
     //loops aninhados para renderizar as perguntas e alternativas
     int tamanhoDoQuiz = quiz.getLength();
+    String[] alternativasMarcadas = new String[tamanhoDoQuiz];
 
     for (int i = 0; i < tamanhoDoQuiz; i++) {
         //perguntas
@@ -35,7 +34,8 @@ public class TelaQuiz extends JFrame {
         add(perguntaLabel);
 
         ButtonGroup grupoDeAlternativas = new ButtonGroup();
-        for (int j = 0; j < 4 ; j++) {
+        int quantidadeDeAlternativas = Integer.parseInt(quiz.getQuestions().get(i).get("amountAlternatives").toString());
+        for (int j = 0; j < quantidadeDeAlternativas ; j++) {
             //alternativas
             String letra = Character.toString((char) ('a' + j));
             String alternativa = quiz.getQuestions().get(i).get(letra).toString();
@@ -43,10 +43,38 @@ public class TelaQuiz extends JFrame {
             alternativa = new String(alternativa.getBytes("ISO-8859-1"), ("UTF-8"));
 
             JRadioButton alternativaButton = new JRadioButton(alternativa);
+            alternativaButton.setActionCommand(i+"");
             alternativaButton.setFont(new Font("Arial", Font.PLAIN, 14));
             grupoDeAlternativas.add(alternativaButton);
             add(alternativaButton);
+            alternativaButton.addActionListener(e -> {
+                JRadioButton selectedButton = (JRadioButton) e.getSource();
+                String alternativaMarcada = selectedButton.getText();
+                System.out.println("Alternativa selecionada: " + alternativaMarcada);
+                int numeroDaQuestao = Integer.parseInt(selectedButton.getActionCommand());
+                alternativasMarcadas[numeroDaQuestao] = alternativaMarcada;
+                
+                
+                
+            });
+
+            }
         }
-        }
+        //Lógica para a correção das alternativas
+        JButton botao = new JButton("Corrigir");
+        add(botao);
+        botao.addActionListener(e -> {
+            int quantidadeDeAcertos = 0;
+            for (int k = 0; k < alternativasMarcadas.length; k++) {
+                String alternativaMarcada = alternativasMarcadas[k];
+                String letraCorreta = quiz.getQuestions().get(k).get("answer").toString();
+                String respostaCorreta = quiz.getQuestions().get(k).get(letraCorreta).toString();
+                if (alternativaMarcada.equals(respostaCorreta)) {
+                    quantidadeDeAcertos++;
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Você acertou " + quantidadeDeAcertos + " perguntas");
+        });
     }
+
 }
