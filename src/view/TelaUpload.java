@@ -1,28 +1,38 @@
 package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.*;
 
 public class TelaUpload {
-    /*Aqui é onde começa a renderizaação das telas (main) a partir da tela de upload do arquivo */
     public static void main(String[] args) {
-        //renderiza a tela de upload
-        JFrame frame = new JFrame("Faça o upload do seu arquivo txt");
-        frame.setSize(400, 200);
+        // Configurações do frame
+        JFrame frame = new JFrame("Faça o upload do seu arquivo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(new BorderLayout());
-        frame.setVisible(true);
+        frame.setPreferredSize(new Dimension(400, 200));
 
-        //renderiza o label
+        // Painel principal
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        // Label com a instrução
         JLabel label = new JLabel("Escolha o arquivo que deseja fazer upload");
         label.setForeground(Color.BLACK);
         label.setHorizontalAlignment(SwingConstants.CENTER);
-        frame.getContentPane().add(label, BorderLayout.NORTH);
+        label.setFont(new Font("Arial", Font.BOLD, 16));
+        mainPanel.add(label, BorderLayout.NORTH);
 
-        //renderiza o panel de escolher arquivo
-        fileChooser escolherArquivo = new fileChooser();
-        frame.getContentPane().add(escolherArquivo, BorderLayout.CENTER);
+        // Painel para o seletor de arquivo
+        FileChooser escolherArquivo = new FileChooser();
+        mainPanel.add(escolherArquivo, BorderLayout.CENTER);
+
+        frame.add(mainPanel);
+
+        // Ajusta o tamanho do frame e o torna visível
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
-    
 }

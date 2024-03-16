@@ -1,4 +1,5 @@
 package view;
+import java.awt.Font;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ public class TelaQuiz extends JFrame {
     
     //renderiza o título
     JLabel titulo = new JLabel(quiz.getTitle());
+    titulo.setFont(new Font("Arial", Font.BOLD, 24));
     add(titulo);
 
     //loops aninhados para renderizar as perguntas e alternativas
@@ -29,8 +31,10 @@ public class TelaQuiz extends JFrame {
         String pergunta =  quiz.getQuestions().get(i).get("title").toString();
         pergunta = new String(pergunta.getBytes("ISO-8859-1"), ("UTF-8"));
         JLabel perguntaLabel = new JLabel(pergunta);
+        perguntaLabel.setFont(new Font("Arial", Font.BOLD, 16));
         add(perguntaLabel);
 
+        ButtonGroup grupoDeAlternativas = new ButtonGroup();
         for (int j = 0; j < 4 ; j++) {
             //alternativas
             String letra = Character.toString((char) ('a' + j));
@@ -39,7 +43,8 @@ public class TelaQuiz extends JFrame {
             alternativa = new String(alternativa.getBytes("ISO-8859-1"), ("UTF-8"));
 
             JRadioButton alternativaButton = new JRadioButton(alternativa);
-
+            alternativaButton.setFont(new Font("Arial", Font.PLAIN, 14));
+            grupoDeAlternativas.add(alternativaButton);
             add(alternativaButton);
         }
         }

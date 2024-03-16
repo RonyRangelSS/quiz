@@ -11,13 +11,13 @@ import controller.Quiz;
 
 import javax.swing.*;
 
-public class fileChooser extends JPanel {
+public class FileChooser extends JPanel {
     private JTextField nomeDoArquivoSelecionado;
     /*Essa é a função que vai renderizar o panel e o botão de escolher arquivo 
     e ao escolher o arquivo dá como argumento para a função que cria o quiz e a tela do quiz
     */
 
-    fileChooser() {
+    FileChooser() {
 
         //registra em um text field o nome do arquivo escolhido
         nomeDoArquivoSelecionado = new JTextField(20);
