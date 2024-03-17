@@ -14,8 +14,8 @@ public class TelaUpload {
         frame.setPreferredSize(new Dimension(400, 110));
         frame.getContentPane().setBackground(new Color(0xe1e5f2));
 
-        ImageIcon waveCina = new ImageIcon("wavingCinamoroll.jpeg");
-        frame.setIconImage(waveCina.getImage());
+        ImageIcon iconCina = new ImageIcon("iconCinamoroll.jpg");
+        frame.setIconImage(iconCina.getImage());
 
         // Painel principal
         JPanel mainPanel = new JPanel();
