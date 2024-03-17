@@ -29,7 +29,7 @@ public class TelaQuiz extends JFrame {
         //perguntas
         String pergunta =  quiz.getQuestions().get(i).get("title").toString();
         pergunta = new String(pergunta.getBytes("ISO-8859-1"), ("UTF-8"));
-        JLabel perguntaLabel = new JLabel(pergunta);
+        JLabel perguntaLabel = new JLabel((i+1)+ ") " + pergunta);
         perguntaLabel.setFont(new Font("Arial", Font.BOLD, 16));
         add(perguntaLabel);
 
@@ -74,6 +74,12 @@ public class TelaQuiz extends JFrame {
                 }
             }
             JOptionPane.showMessageDialog(null, "Você acertou " + quantidadeDeAcertos + " perguntas");
+            try {
+                TelaCorrecao correcao = new TelaCorrecao(quiz, alternativasMarcadas);
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+
         });
     }
 
