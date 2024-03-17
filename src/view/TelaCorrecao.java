@@ -3,10 +3,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.UnsupportedEncodingException;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 import controller.Quiz;
 
@@ -15,11 +12,17 @@ public class TelaCorrecao extends JFrame {
         setTitle(quiz.getTitle());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ImageIcon iconCina = new ImageIcon("iconCinamoroll.jpg");
+        setIconImage(iconCina.getImage());
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setVisible(true);
 
-        JLabel titulo = new JLabel(quiz.getTitle());
-        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel titulo = new JLabel();
+        titulo.setText("*:･ﾟ" + quiz.getTitle() + "*:･ﾟ");
+        titulo.setFont(new Font("Monospaced", Font.BOLD, 34));
+        ImageIcon sleepCina = new ImageIcon("sleepyCinamoroll.png");
+        titulo.setIcon(sleepCina);
+        titulo.setHorizontalTextPosition(JLabel.RIGHT);
         add(titulo);
 
         int tamanhoDoQuiz = quiz.getLength();
@@ -29,7 +32,7 @@ public class TelaCorrecao extends JFrame {
             String pergunta =  quiz.getQuestions().get(i).get("title").toString();
             pergunta = new String(pergunta.getBytes("ISO-8859-1"), ("UTF-8"));
             JLabel perguntaLabel = new JLabel((i+1)+ ") " + pergunta);
-            perguntaLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            perguntaLabel.setFont(new Font("Serif", Font.BOLD, 16));
             add(perguntaLabel);
             String letraCorreta = quiz.getQuestions().get(i).get("answer").toString();
             String respostaCorreta = quiz.getQuestions().get(i).get(letraCorreta).toString();
@@ -43,19 +46,19 @@ public class TelaCorrecao extends JFrame {
     
                 alternativa = new String(alternativa.getBytes("ISO-8859-1"), ("UTF-8"));
                 JLabel alternativaLabel = new JLabel(alternativa);
-                alternativaLabel.setFont(new Font("Arial", Font.BOLD, 16));
+                alternativaLabel.setFont(new Font("Serif", Font.PLAIN, 16));
                 add(alternativaLabel);
                 
              }
              if (respostaMarcada.equals(respostaCorreta)) {
-                JLabel marcador = new JLabel("Você acertou");
-                marcador.setForeground(Color.GREEN);
-                marcador.setFont(new Font("Arial", Font.BOLD, 16));
+                JLabel marcador = new JLabel("Você acertou!");
+                marcador.setForeground(new Color(0x4cbb17));
+                marcador.setFont(new Font("Serif", Font.BOLD, 18));
                 add(marcador);
             } else {
-                JLabel marcador = new JLabel("Você errou");
-                marcador.setForeground(Color.RED);
-                marcador.setFont(new Font("Arial", Font.BOLD, 16));
+                JLabel marcador = new JLabel("Você errou :(");
+                marcador.setForeground(new Color(0xc30010));
+                marcador.setFont(new Font("Serif", Font.BOLD, 18));
                 add(marcador);
             }
              JLabel correcao = new JLabel("Alternativa correta: " + respostaCorreta);
@@ -63,12 +66,14 @@ public class TelaCorrecao extends JFrame {
              add(correcao);
         }
         JButton encerrar = new JButton("Encerrar quiz");
+        encerrar.setBackground(new Color(0xc5dce4));
         encerrar.addActionListener(e -> {
             System.exit(0);
         });
         add(encerrar);
 
         JButton refazer = new JButton("Refazer quiz");
+        refazer.setBackground(new Color(0xc5dce4));
         refazer.addActionListener(e -> {
             try {
                 TelaQuiz telaQuiz = new TelaQuiz(quiz);
