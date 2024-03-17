@@ -1,76 +1,93 @@
 package view;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.*;
-
 import controller.Quiz;
 
 public class TelaCorrecao extends JFrame {
-    TelaCorrecao(Quiz quiz, String[] alternativasMarcadas) throws UnsupportedEncodingException {
+    /*Aqui é onde to criando a função pra renderizar a tela que vai ter o questionário.
+    Ela já renderiza o título do questionário , as perguntas e alternativas
+     */
+    TelaCorrecao(Quiz quiz, String[] alternativasMarcadas ) throws UnsupportedEncodingException {
         setTitle(quiz.getTitle());
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ImageIcon iconCina = new ImageIcon("iconCinamoroll.jpg");
         setIconImage(iconCina.getImage());
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setVisible(true);
 
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        getContentPane().add(mainPanel);
+
+        //renderiza o título
         JLabel titulo = new JLabel();
         titulo.setText("*:･ﾟ" + quiz.getTitle() + "*:･ﾟ");
         titulo.setFont(new Font("Monospaced", Font.BOLD, 34));
         ImageIcon sleepCina = new ImageIcon("sleepyCinamoroll.png");
         titulo.setIcon(sleepCina);
         titulo.setHorizontalTextPosition(JLabel.RIGHT);
-        add(titulo);
+        mainPanel.add(titulo, BorderLayout.NORTH);
 
+        JScrollPane scroll = new JScrollPane();
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+
+
+        //loops aninhados para renderizar as perguntas e alternativas
         int tamanhoDoQuiz = quiz.getLength();
 
         for (int i = 0; i < tamanhoDoQuiz; i++) {
             //perguntas
+            JPanel painel = new JPanel();
+            painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
             String pergunta =  quiz.getQuestions().get(i).get("title").toString();
             pergunta = new String(pergunta.getBytes("ISO-8859-1"), ("UTF-8"));
             JLabel perguntaLabel = new JLabel((i+1)+ ") " + pergunta);
-            perguntaLabel.setFont(new Font("Serif", Font.BOLD, 16));
-            add(perguntaLabel);
+            perguntaLabel.setFont(new Font("Serif", Font.BOLD, 18));
+            painel.add(perguntaLabel);
+
             String letraCorreta = quiz.getQuestions().get(i).get("answer").toString();
             String respostaCorreta = quiz.getQuestions().get(i).get(letraCorreta).toString();
             String respostaMarcada = alternativasMarcadas[i];
-    
+            ButtonGroup grupoDeAlternativas = new ButtonGroup();
+
             int quantidadeDeAlternativas = Integer.parseInt(quiz.getQuestions().get(i).get("amountAlternatives").toString());
             for (int j = 0; j < quantidadeDeAlternativas ; j++) {
                 //alternativas
                 String letra = Character.toString((char) ('a' + j));
                 String alternativa = quiz.getQuestions().get(i).get(letra).toString();
-    
-                alternativa = new String(alternativa.getBytes("ISO-8859-1"), ("UTF-8"));
-                JLabel alternativaLabel = new JLabel(alternativa);
-                alternativaLabel.setFont(new Font("Serif", Font.PLAIN, 16));
-                add(alternativaLabel);
                 
-             }
-             if (respostaMarcada.equals(respostaCorreta)) {
-                JLabel marcador = new JLabel("Você acertou!");
-                marcador.setForeground(new Color(0x4cbb17));
-                marcador.setFont(new Font("Serif", Font.BOLD, 18));
-                add(marcador);
-            } else {
-                JLabel marcador = new JLabel("Você errou :(");
-                marcador.setForeground(new Color(0xc30010));
-                marcador.setFont(new Font("Serif", Font.BOLD, 18));
-                add(marcador);
+                alternativa = new String(alternativa.getBytes("ISO-8859-1"), ("UTF-8"));
+                
+                JRadioButton alternativaButton = new JRadioButton(alternativa);
+                alternativaButton.setActionCommand(i+"");
+                alternativaButton.setFont(new Font("Serif", Font.PLAIN, 15));
+                grupoDeAlternativas.add(alternativaButton);
+                if (respostaMarcada.equals(respostaCorreta) && respostaMarcada.equals(alternativa)) {
+                    alternativaButton.setForeground(new Color(0x0b6623));
+                    alternativaButton.setText(alternativa + " (correta)");
+                    alternativaButton.setSelected(true);
+                } if (!respostaMarcada.equals(respostaCorreta) && respostaMarcada.equals(alternativa)) {
+                    alternativaButton.setForeground(new Color(0x8b0000));
+                    alternativaButton.setText(alternativa + " (incorreta)");
+                    alternativaButton.setSelected(true);
+                } else {
+                    alternativaButton.setForeground(UIManager.getColor("RadioButton.foreground"));
+                }
+                alternativaButton.setEnabled(false);
+                painel.add(alternativaButton);
+                
             }
-             JLabel correcao = new JLabel("Alternativa correta: " + respostaCorreta);
-             correcao.setForeground(Color.DARK_GRAY);
-             add(correcao);
+            container.add(painel);
         }
         JButton encerrar = new JButton("Encerrar quiz");
         encerrar.setBackground(new Color(0xc5dce4));
         encerrar.addActionListener(e -> {
             System.exit(0);
         });
-        add(encerrar);
 
         JButton refazer = new JButton("Refazer quiz");
         refazer.setBackground(new Color(0xc5dce4));
@@ -81,10 +98,14 @@ public class TelaCorrecao extends JFrame {
                 e1.printStackTrace();
             }
         });
-        //quero colocar uma distância entre os botões e as outras coisas
-        add(encerrar);
-        add(refazer);
 
-        
+        container.revalidate();
+        container.repaint();
+        scroll.setViewportView(container);
+        mainPanel.add(scroll, BorderLayout.CENTER);
+        mainPanel.add(encerrar, BorderLayout.SOUTH);
+        mainPanel.add(refazer, BorderLayout.SOUTH);
+    
     }
+
 }

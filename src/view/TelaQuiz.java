@@ -11,12 +11,15 @@ public class TelaQuiz extends JFrame {
      */
     TelaQuiz(Quiz quiz) throws UnsupportedEncodingException {
         setTitle(quiz.getTitle());
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ImageIcon iconCina = new ImageIcon("iconCinamoroll.jpg");
         setIconImage(iconCina.getImage());
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setVisible(true);
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        getContentPane().add(mainPanel);
 
         //renderiza o título
         JLabel titulo = new JLabel();
@@ -25,7 +28,13 @@ public class TelaQuiz extends JFrame {
         ImageIcon sleepCina = new ImageIcon("sleepyCinamoroll.png");
         titulo.setIcon(sleepCina);
         titulo.setHorizontalTextPosition(JLabel.RIGHT);
-        add(titulo);
+        mainPanel.add(titulo, BorderLayout.NORTH);
+
+        JScrollPane scroll = new JScrollPane();
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+
 
         //loops aninhados para renderizar as perguntas e alternativas
         int tamanhoDoQuiz = quiz.getLength();
@@ -33,11 +42,13 @@ public class TelaQuiz extends JFrame {
 
         for (int i = 0; i < tamanhoDoQuiz; i++) {
             //perguntas
+            JPanel painel = new JPanel();
+            painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
             String pergunta =  quiz.getQuestions().get(i).get("title").toString();
             pergunta = new String(pergunta.getBytes("ISO-8859-1"), ("UTF-8"));
             JLabel perguntaLabel = new JLabel((i+1)+ ") " + pergunta);
             perguntaLabel.setFont(new Font("Serif", Font.BOLD, 18));
-            add(perguntaLabel);
+            painel.add(perguntaLabel);
 
             ButtonGroup grupoDeAlternativas = new ButtonGroup();
             int quantidadeDeAlternativas = Integer.parseInt(quiz.getQuestions().get(i).get("amountAlternatives").toString());
@@ -52,7 +63,7 @@ public class TelaQuiz extends JFrame {
                 alternativaButton.setActionCommand(i+"");
                 alternativaButton.setFont(new Font("Serif", Font.PLAIN, 15));
                 grupoDeAlternativas.add(alternativaButton);
-                add(alternativaButton);
+                painel.add(alternativaButton);
                 alternativaButton.addActionListener(e -> {
                     JRadioButton selectedButton = (JRadioButton) e.getSource();
                     String alternativaMarcada = selectedButton.getText();
@@ -65,11 +76,11 @@ public class TelaQuiz extends JFrame {
                 });
 
             }
+            container.add(painel);
         }
         //Lógica para a correção das alternativas
         JButton botao = new JButton("Corrigir!");
         botao.setBackground(new Color(0xc5dce4));
-        add(botao);
         botao.addActionListener(e -> {
             int quantidadeDeAcertos = 0;
             for (int k = 0; k < alternativasMarcadas.length; k++) {
@@ -88,6 +99,11 @@ public class TelaQuiz extends JFrame {
             }
 
         });
+
+        scroll.setViewportView(container);
+        mainPanel.add(scroll, BorderLayout.CENTER);
+        mainPanel.add(botao, BorderLayout.SOUTH);
+
     }
 
 }
