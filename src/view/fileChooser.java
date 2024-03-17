@@ -36,20 +36,20 @@ public class fileChooser extends JPanel {
                 if (resultadoDaEscolha == JFileChooser.APPROVE_OPTION) {
                     File arquivoEscolhido = escolherArquivo.getSelectedFile();
                     nomeDoArquivoSelecionado.setText(arquivoEscolhido.getAbsolutePath());
-                    JLabel label = new JLabel("Arquivo escolhido: " + arquivoEscolhido.getName()+"\n Deseja abrir este arquivo?");
+                    JLabel label = new JLabel("Arquivo escolhido: " + arquivoEscolhido.getName()+". Deseja abrir este arquivo?");
                     int result = JOptionPane
-                    .showConfirmDialog(null, label, "Arquivo escolhido", JOptionPane.YES_NO_OPTION);
+                            .showConfirmDialog(null, label, "Arquivo escolhido", JOptionPane.YES_NO_OPTION);
                     //se o arquivo for escolhido, cria o quiz e a tela do quiz
                     if (result == JOptionPane.YES_OPTION) {
-                            Quiz quiz = new Quiz(arquivoEscolhido.getAbsolutePath());
-                                try {
-                                    TelaQuiz telaQuiz = new TelaQuiz(quiz);
-                                } catch (UnsupportedEncodingException e1) {
-                                    e1.printStackTrace();
-                                }
-                            
+                        Quiz quiz = new Quiz(arquivoEscolhido.getAbsolutePath());
+                        try {
+                            TelaQuiz telaQuiz = new TelaQuiz(quiz);
+                        } catch (UnsupportedEncodingException e1) {
+                            e1.printStackTrace();
+                        }
+
                     }
-    
+
                 }
             }
         });
