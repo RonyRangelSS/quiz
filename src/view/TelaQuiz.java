@@ -1,5 +1,5 @@
 package view;
-import java.awt.Font;
+import java.awt.*;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.*;
@@ -13,55 +13,62 @@ public class TelaQuiz extends JFrame {
         setTitle(quiz.getTitle());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ImageIcon iconCina = new ImageIcon("iconCinamoroll.jpg");
+        setIconImage(iconCina.getImage());
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setVisible(true);
-    
-    //renderiza o título
-    JLabel titulo = new JLabel(quiz.getTitle());
-    titulo.setFont(new Font("Arial", Font.BOLD, 24));
-    add(titulo);
 
-    //loops aninhados para renderizar as perguntas e alternativas
-    int tamanhoDoQuiz = quiz.getLength();
-    String[] alternativasMarcadas = new String[tamanhoDoQuiz];
+        //renderiza o título
+        JLabel titulo = new JLabel();
+        titulo.setText("*:･ﾟ" + quiz.getTitle() + "*:･ﾟ");
+        titulo.setFont(new Font("Monospaced", Font.BOLD, 34));
+        ImageIcon sleepCina = new ImageIcon("sleepyCinamoroll.png");
+        titulo.setIcon(sleepCina);
+        titulo.setHorizontalTextPosition(JLabel.RIGHT);
+        add(titulo);
 
-    for (int i = 0; i < tamanhoDoQuiz; i++) {
-        //perguntas
-        String pergunta =  quiz.getQuestions().get(i).get("title").toString();
-        pergunta = new String(pergunta.getBytes("ISO-8859-1"), ("UTF-8"));
-        JLabel perguntaLabel = new JLabel((i+1)+ ") " + pergunta);
-        perguntaLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        add(perguntaLabel);
+        //loops aninhados para renderizar as perguntas e alternativas
+        int tamanhoDoQuiz = quiz.getLength();
+        String[] alternativasMarcadas = new String[tamanhoDoQuiz];
 
-        ButtonGroup grupoDeAlternativas = new ButtonGroup();
-        int quantidadeDeAlternativas = Integer.parseInt(quiz.getQuestions().get(i).get("amountAlternatives").toString());
-        for (int j = 0; j < quantidadeDeAlternativas ; j++) {
-            //alternativas
-            String letra = Character.toString((char) ('a' + j));
-            String alternativa = quiz.getQuestions().get(i).get(letra).toString();
+        for (int i = 0; i < tamanhoDoQuiz; i++) {
+            //perguntas
+            String pergunta =  quiz.getQuestions().get(i).get("title").toString();
+            pergunta = new String(pergunta.getBytes("ISO-8859-1"), ("UTF-8"));
+            JLabel perguntaLabel = new JLabel((i+1)+ ") " + pergunta);
+            perguntaLabel.setFont(new Font("Serif", Font.BOLD, 18));
+            add(perguntaLabel);
 
-            alternativa = new String(alternativa.getBytes("ISO-8859-1"), ("UTF-8"));
+            ButtonGroup grupoDeAlternativas = new ButtonGroup();
+            int quantidadeDeAlternativas = Integer.parseInt(quiz.getQuestions().get(i).get("amountAlternatives").toString());
+            for (int j = 0; j < quantidadeDeAlternativas ; j++) {
+                //alternativas
+                String letra = Character.toString((char) ('a' + j));
+                String alternativa = quiz.getQuestions().get(i).get(letra).toString();
 
-            JRadioButton alternativaButton = new JRadioButton(alternativa);
-            alternativaButton.setActionCommand(i+"");
-            alternativaButton.setFont(new Font("Arial", Font.PLAIN, 14));
-            grupoDeAlternativas.add(alternativaButton);
-            add(alternativaButton);
-            alternativaButton.addActionListener(e -> {
-                JRadioButton selectedButton = (JRadioButton) e.getSource();
-                String alternativaMarcada = selectedButton.getText();
-                System.out.println("Alternativa selecionada: " + alternativaMarcada);
-                int numeroDaQuestao = Integer.parseInt(selectedButton.getActionCommand());
-                alternativasMarcadas[numeroDaQuestao] = alternativaMarcada;
-                
-                
-                
-            });
+                alternativa = new String(alternativa.getBytes("ISO-8859-1"), ("UTF-8"));
+
+                JRadioButton alternativaButton = new JRadioButton(alternativa);
+                alternativaButton.setActionCommand(i+"");
+                alternativaButton.setFont(new Font("Serif", Font.PLAIN, 15));
+                grupoDeAlternativas.add(alternativaButton);
+                add(alternativaButton);
+                alternativaButton.addActionListener(e -> {
+                    JRadioButton selectedButton = (JRadioButton) e.getSource();
+                    String alternativaMarcada = selectedButton.getText();
+                    System.out.println("Alternativa selecionada: " + alternativaMarcada);
+                    int numeroDaQuestao = Integer.parseInt(selectedButton.getActionCommand());
+                    alternativasMarcadas[numeroDaQuestao] = alternativaMarcada;
+
+
+
+                });
 
             }
         }
         //Lógica para a correção das alternativas
-        JButton botao = new JButton("Corrigir");
+        JButton botao = new JButton("Corrigir!");
+        botao.setBackground(new Color(0xc5dce4));
         add(botao);
         botao.addActionListener(e -> {
             int quantidadeDeAcertos = 0;
