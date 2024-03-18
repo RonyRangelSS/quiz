@@ -36,15 +36,16 @@ public class FileChooser extends JPanel {
                 if (resultadoDaEscolha == JFileChooser.APPROVE_OPTION) {
                     File arquivoEscolhido = escolherArquivo.getSelectedFile();
                     nomeDoArquivoSelecionado.setText(arquivoEscolhido.getAbsolutePath());
-                    JLabel label = new JLabel("Arquivo escolhido: " + arquivoEscolhido.getName()+". Deseja abrir este arquivo?");
+                    JLabel label = new JLabel(
+                            "Arquivo escolhido: " + arquivoEscolhido.getName() + ". Deseja abrir este arquivo?");
                     UIManager.put("OptionPane.yesButtonText", "Sim");
                     UIManager.put("OptionPane.noButtonText", "Não");
                     UIManager.put("OptionPane.messageFont", new Font("Serif", Font.PLAIN, 16));
                     UIManager.put("OptionPane.messageBackground", new Color(0xe1e5f2));
                     UIManager.put("OptionPane.questionIcon", new ImageIcon("sleepyCinamoroll.png"));
                     int result = JOptionPane
-                    .showConfirmDialog(null, label, "Arquivo escolhido", JOptionPane.YES_NO_OPTION);
-                    //se o arquivo for escolhido, cria o quiz e a tela do quiz
+                            .showConfirmDialog(null, label, "Arquivo escolhido", JOptionPane.YES_NO_OPTION);
+                    // se o arquivo for escolhido, cria o quiz e a tela do quiz
                     if (result == JOptionPane.YES_OPTION) {
                         try {
                             Quiz quiz = new Quiz(arquivoEscolhido.getAbsolutePath());
