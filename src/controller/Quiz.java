@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Quiz {
+public class Quiz extends RuntimeException {
 
     private String fileName;
     private String title;
@@ -19,11 +19,18 @@ public class Quiz {
         createQuiz();
     }
 
-    public void createQuiz() {
+    public void createQuiz() throws WrongFileTypeException {
+
+        boolean choosenFileIsNotTxt = !fileName.endsWith(".txt");
+
         ArrayList<HashMap> questions = new ArrayList<>();
         try {
             FileReader fileReader = new FileReader(this.fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            if (choosenFileIsNotTxt) {
+                throw new WrongFileTypeException("O arquivo selecionado não é um .txt");
+            }
 
             int amountQuestions = 0;
             int currentAmountAnswers;
@@ -38,41 +45,65 @@ public class Quiz {
             int i = 1;
             boolean stillQuestionsToRead = i < fileContent.size();
 
-            while (stillQuestionsToRead) {
-                currentAmountAnswers = Integer.parseInt(fileContent.get(i));
+            try {
 
-                amountQuestions++;
+                while (stillQuestionsToRead) {
 
-                HashMap<String, String> currentQuestion = new HashMap<>();
-                String currentQuestionTitle = fileContent.get(i + 1);
-                String currentQuestionAnswer = fileContent.get(i + currentAmountAnswers + 2);
+                    try {
+                        currentAmountAnswers = Integer.parseInt(fileContent.get(i));
+                    } catch (NumberFormatException n) {
+                        throw new WrongFileTypeException(
+                                "O arquivo selecionado não está seguindo o padrão suportado pela aplicação");
+                    }
 
-                currentQuestion.put("title", currentQuestionTitle);
-                currentQuestion.put("answer", currentQuestionAnswer);
-                currentQuestion.put("amountAlternatives", Integer.toString(currentAmountAnswers));
+                    amountQuestions++;
 
-                int currentAlternativePointer = i + 2;
-                int lastAlternativePointer = i + currentAmountAnswers + 1;
-                boolean stillAlternativesToRead = currentAlternativePointer <= lastAlternativePointer;
+                    HashMap<String, String> currentQuestion = new HashMap<>();
 
-                String currentAlternativeLetter;
-                String currentAlternativeContent;
+                    String currentQuestionTitle = fileContent.get(i + 1);
 
-                while (stillAlternativesToRead) {
-                    currentAlternativeLetter = Character.toString((char) ('a'
-                            + (currentAmountAnswers - (lastAlternativePointer - currentAlternativePointer + 1))));
+                    if (currentQuestionTitle.isEmpty()) {
+                        throw new WrongFileTypeException("Alguma questão no seu quiz não possui título");
+                    }
 
-                    currentAlternativeContent = fileContent.get(currentAlternativePointer);
+                    String currentQuestionAnswer = fileContent.get(i + currentAmountAnswers + 2);
+                    if (currentQuestionAnswer.isBlank()) {
+                        throw new WrongFileTypeException(
+                                "Alguma questão no seu quiz não pussue a resposta correta preenchida");
+                    }
 
-                    currentQuestion.put(currentAlternativeLetter, currentAlternativeContent);
-                    currentAlternativePointer++;
+                    currentQuestion.put("title", currentQuestionTitle);
+                    currentQuestion.put("answer", currentQuestionAnswer);
+                    currentQuestion.put("amountAlternatives", Integer.toString(currentAmountAnswers));
 
-                    stillAlternativesToRead = currentAlternativePointer <= lastAlternativePointer;
+                    int currentAlternativePointer = i + 2;
+                    int lastAlternativePointer = i + currentAmountAnswers + 1;
+                    boolean stillAlternativesToRead = currentAlternativePointer <= lastAlternativePointer;
+
+                    String currentAlternativeLetter;
+                    String currentAlternativeContent;
+
+                    while (stillAlternativesToRead) {
+                        currentAlternativeLetter = Character.toString((char) ('a'
+                                + (currentAmountAnswers - (lastAlternativePointer - currentAlternativePointer + 1))));
+
+                        currentAlternativeContent = fileContent.get(currentAlternativePointer);
+
+                        if (currentAlternativeContent.isEmpty()) {
+                            throw new WrongFileTypeException("Alguma alternativa no seu arquivo não está preenchida");
+                        }
+                        currentQuestion.put(currentAlternativeLetter, currentAlternativeContent);
+                        currentAlternativePointer++;
+                        stillAlternativesToRead = currentAlternativePointer <= lastAlternativePointer;
+                    }
+
+                    questions.add(currentQuestion);
+                    i = i + currentAmountAnswers + 3;
+                    stillQuestionsToRead = i < fileContent.size();
                 }
-
-                questions.add(currentQuestion);
-                i = i + currentAmountAnswers + 3;
-                stillQuestionsToRead = i < fileContent.size();
+            } catch (IndexOutOfBoundsException e) {
+                throw new WrongFileTypeException(
+                        "O arquivo selecionado não está seguindo o padrão suportado pela aplicação");
             }
 
             bufferedReader.close();
@@ -81,7 +112,7 @@ public class Quiz {
             this.title = fileContent.get(0);
 
         } catch (IOException e) {
-            System.out.println("Não consegui encontrar o arquivo " + fileName);
+            throw new WrongFileTypeException("Não foi possível encontrar o arquivo selecionado");
         }
 
         this.questions = questions;

@@ -1,4 +1,5 @@
 package view;
+
 import java.awt.*;
 import java.io.UnsupportedEncodingException;
 
@@ -6,10 +7,13 @@ import javax.swing.*;
 import controller.Quiz;
 
 public class TelaCorrecao extends JFrame {
-    /*Aqui é onde to criando a função pra renderizar a tela que vai ter o questionário.
-    Ela já renderiza o título do questionário , as perguntas e alternativas
+    /*
+     * Aqui é onde to criando a função pra renderizar a tela que vai ter o
+     * questionário.
+     * Ela já renderiza o título do questionário , as perguntas e alternativas
      */
-    TelaCorrecao(Quiz quiz, String[] alternativasMarcadas, int quantidadeDeacertos ) throws UnsupportedEncodingException {
+    TelaCorrecao(Quiz quiz, String[] alternativasMarcadas, int quantidadeDeacertos)
+            throws UnsupportedEncodingException {
         setTitle(quiz.getTitle());
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,15 +26,14 @@ public class TelaCorrecao extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         getContentPane().add(mainPanel);
 
-        
-        //renderiza o título
+        // renderiza o título
         JLabel titulo = new JLabel();
         titulo.setText("*:･ﾟ" + quiz.getTitle() + "*:･ﾟ");
         titulo.setFont(new Font("Monospaced", Font.BOLD, 34));
         ImageIcon sleepCina = new ImageIcon("sleepyCinamoroll.png");
         titulo.setIcon(sleepCina);
         titulo.setHorizontalTextPosition(JLabel.CENTER);
-        
+
         JPanel tituloPanel = new JPanel();
         tituloPanel.setLayout(new FlowLayout());
         tituloPanel.add(titulo);
@@ -42,26 +45,24 @@ public class TelaCorrecao extends JFrame {
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         container.setBackground(new Color(0xe1e5f2));
-        
 
         JPanel panelPerguntas = new JPanel();
         panelPerguntas.setLayout(new FlowLayout());
         panelPerguntas.setBackground(new Color(0xe1e5f2));
 
-
-        //loops aninhados para renderizar as perguntas e alternativas
+        // loops aninhados para renderizar as perguntas e alternativas
         int tamanhoDoQuiz = quiz.getLength();
 
         for (int i = 0; i < tamanhoDoQuiz; i++) {
-            //perguntas
+            // perguntas
             JPanel painel = new JPanel();
             painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
             painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             painel.setMaximumSize(new Dimension(800, 600));
             painel.setMinimumSize(new Dimension(800, 100));
-            String pergunta =  quiz.getQuestions().get(i).get("title").toString();
+            String pergunta = quiz.getQuestions().get(i).get("title").toString();
             pergunta = new String(pergunta.getBytes("ISO-8859-1"), ("UTF-8"));
-            JLabel perguntaLabel = new JLabel((i+1)+ ") " + pergunta);
+            JLabel perguntaLabel = new JLabel((i + 1) + ") " + pergunta);
             perguntaLabel.setFont(new Font("Serif", Font.BOLD, 18));
             painel.add(perguntaLabel);
 
@@ -70,16 +71,17 @@ public class TelaCorrecao extends JFrame {
             String respostaMarcada = alternativasMarcadas[i];
             ButtonGroup grupoDeAlternativas = new ButtonGroup();
 
-            int quantidadeDeAlternativas = Integer.parseInt(quiz.getQuestions().get(i).get("amountAlternatives").toString());
-            for (int j = 0; j < quantidadeDeAlternativas ; j++) {
-                //alternativas
+            int quantidadeDeAlternativas = Integer
+                    .parseInt(quiz.getQuestions().get(i).get("amountAlternatives").toString());
+            for (int j = 0; j < quantidadeDeAlternativas; j++) {
+                // alternativas
                 String letra = Character.toString((char) ('a' + j));
                 String alternativa = quiz.getQuestions().get(i).get(letra).toString();
-                
+
                 alternativa = new String(alternativa.getBytes("ISO-8859-1"), ("UTF-8"));
-                
+
                 JRadioButton alternativaButton = new JRadioButton(alternativa);
-                alternativaButton.setActionCommand(i+"");
+                alternativaButton.setActionCommand(i + "");
                 alternativaButton.setFont(new Font("Serif", Font.PLAIN, 15));
                 grupoDeAlternativas.add(alternativaButton);
                 if (respostaMarcada.equals(respostaCorreta) && respostaMarcada.equals(alternativa)) {
@@ -87,7 +89,8 @@ public class TelaCorrecao extends JFrame {
                     alternativaButton.setText(alternativa + " ✓");
                     alternativaButton.setSelected(true);
                     perguntaLabel.setForeground(Color.GREEN);
-                } if (!respostaMarcada.equals(respostaCorreta) && respostaMarcada.equals(alternativa)) {
+                }
+                if (!respostaMarcada.equals(respostaCorreta) && respostaMarcada.equals(alternativa)) {
                     alternativaButton.setBackground(Color.RED);
                     alternativaButton.setText(alternativa + " ✗");
                     alternativaButton.setSelected(true);
@@ -97,7 +100,7 @@ public class TelaCorrecao extends JFrame {
                 }
                 alternativaButton.setEnabled(false);
                 painel.add(alternativaButton);
-                
+
             }
             container.add(painel);
             container.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -141,8 +144,7 @@ public class TelaCorrecao extends JFrame {
 
         mainPanel.add(scroll, BorderLayout.CENTER);
         mainPanel.add(painelBotoes, BorderLayout.SOUTH);
-        
-    
+
     }
 
 }

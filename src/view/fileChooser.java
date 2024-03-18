@@ -6,28 +6,31 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 
 import controller.Quiz;
+import controller.WrongFileTypeException;
 
 import javax.swing.*;
 
 public class FileChooser extends JPanel {
     private JTextField nomeDoArquivoSelecionado;
-    /*Essa é a função que vai renderizar o panel e o botão de escolher arquivo 
-    e ao escolher o arquivo dá como argumento para a função que cria o quiz e a tela do quiz
-    */
+    /*
+     * Essa é a função que vai renderizar o panel e o botão de escolher arquivo
+     * e ao escolher o arquivo dá como argumento para a função que cria o quiz e a
+     * tela do quiz
+     */
 
     FileChooser() {
 
-        //registra em um text field o nome do arquivo escolhido
+        // registra em um text field o nome do arquivo escolhido
         nomeDoArquivoSelecionado = new JTextField(20);
         nomeDoArquivoSelecionado.setEditable(false);
         add(nomeDoArquivoSelecionado);
 
-        //renderiza o botão de escolher arquivo
+        // renderiza o botão de escolher arquivo
         JButton botaoEscolherArquivo = new JButton("Escolher Arquivo");
         botaoEscolherArquivo.setBackground(new Color(0xc5dce4));
         botaoEscolherArquivo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //abre o file chooser para escolher o arquivo
+                // abre o file chooser para escolher o arquivo
                 JFileChooser escolherArquivo = new JFileChooser();
                 int resultadoDaEscolha = escolherArquivo.showOpenDialog(null);
                 if (resultadoDaEscolha == JFileChooser.APPROVE_OPTION) {
@@ -43,11 +46,15 @@ public class FileChooser extends JPanel {
                     .showConfirmDialog(null, label, "Arquivo escolhido", JOptionPane.YES_NO_OPTION);
                     //se o arquivo for escolhido, cria o quiz e a tela do quiz
                     if (result == JOptionPane.YES_OPTION) {
-                        Quiz quiz = new Quiz(arquivoEscolhido.getAbsolutePath());
                         try {
-                            TelaQuiz telaQuiz = new TelaQuiz(quiz);
-                        } catch (UnsupportedEncodingException e1) {
-                            e1.printStackTrace();
+                            Quiz quiz = new Quiz(arquivoEscolhido.getAbsolutePath());
+                            try {
+                                TelaQuiz telaQuiz = new TelaQuiz(quiz);
+                            } catch (UnsupportedEncodingException e1) {
+                                e1.printStackTrace();
+                            }
+                        } catch (WrongFileTypeException wfte) {
+                            JOptionPane.showMessageDialog(null, wfte.getMessage());
                         }
 
                     }

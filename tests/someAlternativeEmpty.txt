@@ -1,0 +1,22 @@
+Quiz sobre Java
+4
+A capacidade de sobrescrever métodos numa classe filha é chamada de
+Overloading
+Overriding
+Overclocking
+Overextending
+b
+5
+Qual a cor do cavalo branco de napoleão?
+branco
+
+azul
+rosa
+amarelo
+a
+3
+Que cor é o sol?
+branco
+vermelho
+azul
+c
