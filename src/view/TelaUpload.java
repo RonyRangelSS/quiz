@@ -7,7 +7,7 @@ import java.awt.Font;
 import javax.swing.*;
 
 public class TelaUpload {
-    public static void main(String[] args) {
+   TelaUpload() {
         // Configurações do frame
         JFrame frame = new JFrame("Faça o upload do seu arquivo!");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -21,20 +21,34 @@ public class TelaQuiz extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
         getContentPane().add(mainPanel);
 
+        JPanel panelEspaco = new JPanel();
+        panelEspaco.setLayout(new BorderLayout());
+
         //renderiza o título
         JLabel titulo = new JLabel();
         titulo.setText("*:･ﾟ" + quiz.getTitle() + "*:･ﾟ");
         titulo.setFont(new Font("Monospaced", Font.BOLD, 34));
         ImageIcon sleepCina = new ImageIcon("sleepyCinamoroll.png");
         titulo.setIcon(sleepCina);
-        titulo.setHorizontalTextPosition(JLabel.RIGHT);
-        mainPanel.add(titulo, BorderLayout.NORTH);
+        titulo.setHorizontalTextPosition(JLabel.CENTER);
+
+        JPanel tituloPanel = new JPanel();
+        tituloPanel.setLayout(new FlowLayout());
+        tituloPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        tituloPanel.add(titulo);
+        panelEspaco.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
+        panelEspaco.add(tituloPanel, BorderLayout.CENTER);
+        mainPanel.add(panelEspaco, BorderLayout.NORTH);
 
         JScrollPane scroll = new JScrollPane();
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.setBackground(new Color(0xe1e5f2));
 
+        JPanel panelPerguntas = new JPanel();
+        panelPerguntas.setLayout(new FlowLayout());
+        panelPerguntas.setBackground(new Color(0xe1e5f2));
 
         //loops aninhados para renderizar as perguntas e alternativas
         int tamanhoDoQuiz = quiz.getLength();
@@ -44,6 +58,9 @@ public class TelaQuiz extends JFrame {
             //perguntas
             JPanel painel = new JPanel();
             painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
+            painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            painel.setMaximumSize(new Dimension(800, 600));
+            painel.setMinimumSize(new Dimension(800, 100));
             String pergunta =  quiz.getQuestions().get(i).get("title").toString();
             pergunta = new String(pergunta.getBytes("ISO-8859-1"), ("UTF-8"));
             JLabel perguntaLabel = new JLabel((i+1)+ ") " + pergunta);
@@ -77,10 +94,13 @@ public class TelaQuiz extends JFrame {
 
             }
             container.add(painel);
+            container.add(Box.createRigidArea(new Dimension(0, 20)));
+            panelPerguntas.add(container);
         }
         //Lógica para a correção das alternativas
         JButton botao = new JButton("Corrigir!");
         botao.setBackground(new Color(0xc5dce4));
+        botao.setPreferredSize(new Dimension(100, 50));
         botao.addActionListener(e -> {
             int quantidadeDeAcertos = 0;
             for (int k = 0; k < alternativasMarcadas.length; k++) {
@@ -93,16 +113,24 @@ public class TelaQuiz extends JFrame {
             }
             JOptionPane.showMessageDialog(null, "Você acertou " + quantidadeDeAcertos + " perguntas");
             try {
-                TelaCorrecao correcao = new TelaCorrecao(quiz, alternativasMarcadas);
+                TelaCorrecao correcao = new TelaCorrecao(quiz, alternativasMarcadas, quantidadeDeAcertos);
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
             }
+            dispose();
 
         });
 
-        scroll.setViewportView(container);
+        JPanel panelBotao = new JPanel();
+        panelBotao.setLayout(new BorderLayout());
+        panelBotao.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
+        panelBotao.add(botao, BorderLayout.EAST);
+        panelBotao.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.SOUTH);
+
+        scroll.setViewportView(panelPerguntas);
+        scroll.setPreferredSize(new Dimension(800, 400));
         mainPanel.add(scroll, BorderLayout.CENTER);
-        mainPanel.add(botao, BorderLayout.SOUTH);
+        mainPanel.add(panelBotao, BorderLayout.SOUTH);
 
     }
 
