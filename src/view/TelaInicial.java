@@ -11,10 +11,9 @@ public class TelaInicial implements ActionListener {
     JPanel panelTop = new JPanel();
     JPanel panelCenter = new JPanel();
     JPanel panelBottom = new JPanel();
-    JLabel label1 = new JLabel("✧*:° Bem-vindo(a) ao RONI QUIZ! ✧*:°");
+    JLabel label1 = new JLabel();
     JLabel label2 = new JLabel("♡ Discentes: ♡");
     TelaInicial() {
-        //startButton.setBounds(100,160,200,40);
         startButton.setPreferredSize(new Dimension(200, 70));
         startButton.setFont(new Font("Monospaced", Font.BOLD, 25));
         startButton.setFocusable(false);
@@ -38,14 +37,15 @@ public class TelaInicial implements ActionListener {
         panelCenter.add(startButton,c);
         panelCenter.setBackground(new Color(0xe1e5f2));
 
-        label1.setForeground(new Color(0x538296));
+        ImageIcon logo = new ImageIcon("logo.png");
+        label1.setIcon(logo);
         label1.setHorizontalAlignment(SwingConstants.CENTER);
         label1.setFont(new Font("Serif", Font.BOLD, 25));
 
         ImageIcon discentes = new ImageIcon("discentes.png");
         label2.setIcon(discentes);
         label2.setForeground(Color.BLACK);
-        label2.setFont(new Font("Serif", Font.PLAIN, 20));
+        label2.setFont(new Font("Serif", Font.PLAIN, 18));
         label2.setHorizontalTextPosition(JLabel.CENTER);
         label2.setVerticalTextPosition(JLabel.TOP);
 
