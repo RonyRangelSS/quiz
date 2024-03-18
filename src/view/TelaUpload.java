@@ -30,7 +30,7 @@ public class TelaUpload extends JFrame {
         mainPanel.add(label, BorderLayout.NORTH);
 
         // Painel para o seletor de arquivo
-        fileChooser escolherArquivo = new fileChooser();
+        FileChooser escolherArquivo = new FileChooser();
         escolherArquivo.setBackground(new Color(0xe1e5f2));
         mainPanel.add(escolherArquivo, BorderLayout.CENTER);
 
