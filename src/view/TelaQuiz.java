@@ -1,5 +1,7 @@
 package view;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.UnsupportedEncodingException;
 
 import javax.swing.*;
@@ -9,6 +11,9 @@ public class TelaQuiz extends JFrame {
     /*Aqui é onde to criando a função pra renderizar a tela que vai ter o questionário.
     Ela já renderiza o título do questionário , as perguntas e alternativas
      */
+
+    public Timer timer;
+
     TelaQuiz(Quiz quiz) throws UnsupportedEncodingException {
         setTitle(quiz.getTitle());
         setSize(800, 600);
@@ -97,34 +102,65 @@ public class TelaQuiz extends JFrame {
             container.add(Box.createRigidArea(new Dimension(0, 20)));
             panelPerguntas.add(container);
         }
+
+        // Lógica para verificar as respostas corretas
+        ActionListener verificarRespostas = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int quantidadeDeAcertos = 0;
+                for (int k = 0; k < alternativasMarcadas.length; k++) {
+                    String alternativaMarcada = alternativasMarcadas[k];
+                    String letraCorreta = quiz.getQuestions().get(k).get("answer").toString();
+                    String respostaCorreta = quiz.getQuestions().get(k).get(letraCorreta).toString();
+                    if (alternativaMarcada.equals(respostaCorreta)) {
+                        quantidadeDeAcertos++;
+                    }
+                }
+                JOptionPane.showMessageDialog(null, "Você acertou " + quantidadeDeAcertos + " perguntas");
+                try {
+                    TelaCorrecao correcao = new TelaCorrecao(quiz, alternativasMarcadas, quantidadeDeAcertos);
+                } catch (UnsupportedEncodingException e1) {
+                    e1.printStackTrace();
+                }
+                dispose();
+            }
+        };
+
+        // Lógica para o temporizador
+        JLabel timerLabel = new JLabel();
+        timerLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        timer = new Timer(1000, new ActionListener() {
+            int secondsLeft = 40; // Defina o número inicial de segundos
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (secondsLeft > 15) {
+                    timerLabel.setText("Faltam: " + secondsLeft + " segundinhos ;)");
+                    secondsLeft--;
+                } else if (secondsLeft > 0) {
+                    timerLabel.setText("Eitaa, tá acabando (OMG) :" + secondsLeft + " segundinhos ;)");
+                    secondsLeft--;
+                } else {
+                    timer.stop(); // Pare o temporizador quando os 60 segundos acabarem
+                    timerLabel.setText("Cabosse! ;-;");
+                    verificarRespostas.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+                }
+            }
+        });
+        timer.start(); // Inicie o temporizador
+
         //Lógica para a correção das alternativas
         JButton botao = new JButton("Corrigir!");
         botao.setBackground(new Color(0xc5dce4));
         botao.setPreferredSize(new Dimension(100, 50));
-        botao.addActionListener(e -> {
-            int quantidadeDeAcertos = 0;
-            for (int k = 0; k < alternativasMarcadas.length; k++) {
-                String alternativaMarcada = alternativasMarcadas[k];
-                String letraCorreta = quiz.getQuestions().get(k).get("answer").toString();
-                String respostaCorreta = quiz.getQuestions().get(k).get(letraCorreta).toString();
-                if (alternativaMarcada.equals(respostaCorreta)) {
-                    quantidadeDeAcertos++;
-                }
-            }
-            JOptionPane.showMessageDialog(null, "Você acertou " + quantidadeDeAcertos + " perguntas");
-            try {
-                TelaCorrecao correcao = new TelaCorrecao(quiz, alternativasMarcadas, quantidadeDeAcertos);
-            } catch (UnsupportedEncodingException e1) {
-                e1.printStackTrace();
-            }
-            dispose();
-
-        });
+        botao.addActionListener(verificarRespostas);
 
         JPanel panelBotao = new JPanel();
         panelBotao.setLayout(new BorderLayout());
         panelBotao.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.NORTH);
         panelBotao.add(botao, BorderLayout.EAST);
+        panelBotao.add(timerLabel, BorderLayout.WEST);
         panelBotao.add(Box.createRigidArea(new Dimension(0, 10)), BorderLayout.SOUTH);
 
         scroll.setViewportView(panelPerguntas);
