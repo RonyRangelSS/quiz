@@ -48,7 +48,7 @@ public class FileChooser extends JPanel {
                     // se o arquivo for escolhido, cria o quiz e a tela do quiz
                     if (result == JOptionPane.YES_OPTION) {
                         String time = (String)JOptionPane.showInputDialog(null, "Quanto tempo em minutos você quer para fazer o quiz ?\n OBS: Caso não queira tempo clique em cancele ou deixe em branco", "Tempo do Quiz",
-                        JOptionPane.QUESTION_MESSAGE, new ImageIcon("sleepyCinamoroll.png"), null, "10");
+                        JOptionPane.QUESTION_MESSAGE, new ImageIcon("sleepyCinamoroll.png"), null, "0");
                         if (time == null) {
                             time = "0";
                         }
