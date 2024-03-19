@@ -12,7 +12,7 @@ public class TelaCorrecao extends JFrame {
      * questionário.
      * Ela já renderiza o título do questionário , as perguntas e alternativas
      */
-    TelaCorrecao(Quiz quiz, String[] alternativasMarcadas, int quantidadeDeacertos)
+    TelaCorrecao(Quiz quiz, String[] alternativasMarcadas, int quantidadeDeacertos, int time)
             throws UnsupportedEncodingException {
         setTitle(quiz.getTitle());
         setSize(800, 600);
@@ -84,13 +84,13 @@ public class TelaCorrecao extends JFrame {
                 alternativaButton.setActionCommand(i + "");
                 alternativaButton.setFont(new Font("Serif", Font.PLAIN, 15));
                 grupoDeAlternativas.add(alternativaButton);
-                if (respostaMarcada.equals(respostaCorreta) && respostaMarcada.equals(alternativa)) {
+                if (respostaMarcada != null && respostaMarcada.equals(respostaCorreta) && respostaMarcada.equals(alternativa)) {
                     alternativaButton.setBackground(Color.GREEN);
                     alternativaButton.setText(alternativa + " ✓");
                     alternativaButton.setSelected(true);
                     perguntaLabel.setForeground(Color.GREEN);
                 }
-                if (!respostaMarcada.equals(respostaCorreta) && respostaMarcada.equals(alternativa)) {
+                if (respostaMarcada != null && !respostaMarcada.equals(respostaCorreta) && respostaMarcada.equals(alternativa)) {
                     alternativaButton.setBackground(Color.RED);
                     alternativaButton.setText(alternativa + " ✗");
                     alternativaButton.setSelected(true);
@@ -120,7 +120,7 @@ public class TelaCorrecao extends JFrame {
         refazer.setBackground(new Color(0xc5dce4));
         refazer.addActionListener(e -> {
             try {
-                TelaQuiz telaQuiz = new TelaQuiz(quiz);
+                TelaQuiz telaQuiz = new TelaQuiz(quiz, time);
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
             }

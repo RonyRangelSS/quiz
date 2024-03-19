@@ -2,8 +2,15 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import controller.Quiz;
 
@@ -14,7 +21,7 @@ public class TelaQuiz extends JFrame {
 
     public Timer timer;
 
-    TelaQuiz(Quiz quiz) throws UnsupportedEncodingException {
+    TelaQuiz(Quiz quiz, int time) throws UnsupportedEncodingException {
         setTitle(quiz.getTitle());
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -96,29 +103,43 @@ public class TelaQuiz extends JFrame {
 
 
                 });
+            
 
             }
             container.add(painel);
             container.add(Box.createRigidArea(new Dimension(0, 20)));
             panelPerguntas.add(container);
         }
-
+                 
+            
+        
         // Lógica para verificar as respostas corretas
         ActionListener verificarRespostas = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int quantidadeDeAcertos = 0;
+                boolean isNull = false;
                 for (int k = 0; k < alternativasMarcadas.length; k++) {
                     String alternativaMarcada = alternativasMarcadas[k];
                     String letraCorreta = quiz.getQuestions().get(k).get("answer").toString();
                     String respostaCorreta = quiz.getQuestions().get(k).get(letraCorreta).toString();
-                    if (alternativaMarcada.equals(respostaCorreta)) {
+                    if (alternativaMarcada != null && alternativaMarcada.equals(respostaCorreta)) {
                         quantidadeDeAcertos++;
+                    }
+                    if (alternativaMarcada == null) {
+                        isNull = true;
+                    }
+                    
+                }
+                if (isNull) {
+                    int result = JOptionPane.showConfirmDialog(null, "Você não respondeu todas as perguntas, deseja continuar?", "Aviso", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon("sleepyCinamoroll.png"));
+                    if (result == JOptionPane.NO_OPTION) {
+                        return;
                     }
                 }
                 JOptionPane.showMessageDialog(null, "Você acertou " + quantidadeDeAcertos + " perguntas");
                 try {
-                    TelaCorrecao correcao = new TelaCorrecao(quiz, alternativasMarcadas, quantidadeDeAcertos);
+                    TelaCorrecao correcao = new TelaCorrecao(quiz, alternativasMarcadas, quantidadeDeAcertos, time);
                 } catch (UnsupportedEncodingException e1) {
                     e1.printStackTrace();
                 }
@@ -130,25 +151,30 @@ public class TelaQuiz extends JFrame {
         JLabel timerLabel = new JLabel();
         timerLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        timer = new Timer(1000, new ActionListener() {
-            int secondsLeft = 40; // Defina o número inicial de segundos
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (secondsLeft > 15) {
-                    timerLabel.setText("Faltam: " + secondsLeft + " segundinhos ;)");
-                    secondsLeft--;
-                } else if (secondsLeft > 0) {
-                    timerLabel.setText("Eitaa, tá acabando (OMG) :" + secondsLeft + " segundinhos ;)");
-                    secondsLeft--;
-                } else {
-                    timer.stop(); // Pare o temporizador quando os 60 segundos acabarem
-                    timerLabel.setText("Cabosse! ;-;");
-                    verificarRespostas.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+        if (time==0) {
+            timerLabel.setText("Tempo ilimitado! :)");
+        } else {
+            timer = new Timer(1000, new ActionListener() {
+                int secondsLeft = time*60; // Defina o número inicial de segundos
+    
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (secondsLeft > 15) {
+                        timerLabel.setText("Faltam: " + secondsLeft + " segundinhos ;)");
+                        secondsLeft--;
+                    } else if (secondsLeft > 0) {
+                        timerLabel.setText("Eitaa, tá acabando (OMG) :" + secondsLeft + " segundinhos ;)");
+                        secondsLeft--;
+                    } else {
+                        timer.stop(); // Pare o temporizador quando o tempo acabar
+                        timerLabel.setText("Cabosse! ;-;");
+                        verificarRespostas.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+                    }
                 }
-            }
-        });
-        timer.start(); // Inicie o temporizador
+            });
+            timer.start(); // Inicie o temporizador
+            
+        }
 
         //Lógica para a correção das alternativas
         JButton botao = new JButton("Corrigir!");
