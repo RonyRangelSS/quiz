@@ -47,16 +47,16 @@ public class FileChooser extends JPanel {
                             .showConfirmDialog(null, label, "Arquivo escolhido", JOptionPane.YES_NO_OPTION);
                     // se o arquivo for escolhido, cria o quiz e a tela do quiz
                     if (result == JOptionPane.YES_OPTION) {
-                        String time = (String)JOptionPane.showInputDialog(null, "Quanto tempo em minutos você quer para fazer o quiz ?\n OBS: Caso não queira tempo clique em cancele ou deixe em branco", "Tempo do Quiz",
+                        String time = (String)JOptionPane.showInputDialog(null, "Quantos minutos você quer para fazer o quiz ?\n OBS: Caso não queira tempo clique em cancele ou deixe em branco", "Tempo do Quiz",
                         JOptionPane.QUESTION_MESSAGE, new ImageIcon("sleepyCinamoroll.png"), null, "0");
                         if (time == null) {
                             time = "0";
                         }
-                        int timeInt = Integer.parseInt(time);
+                        float timeFloat = Float.parseFloat(time);
                         try {
                             Quiz quiz = new Quiz(arquivoEscolhido.getAbsolutePath());
                             try {
-                                TelaQuiz telaQuiz = new TelaQuiz(quiz, timeInt);
+                                TelaQuiz telaQuiz = new TelaQuiz(quiz, timeFloat);
                             } catch (UnsupportedEncodingException e1) {
                                 e1.printStackTrace();
                             }

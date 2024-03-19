@@ -2,15 +2,7 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import controller.Quiz;
 
@@ -21,7 +13,7 @@ public class TelaQuiz extends JFrame {
 
     public Timer timer;
 
-    TelaQuiz(Quiz quiz, int time) throws UnsupportedEncodingException {
+    TelaQuiz(Quiz quiz, float time) throws UnsupportedEncodingException {
         setTitle(quiz.getTitle());
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -155,7 +147,7 @@ public class TelaQuiz extends JFrame {
             timerLabel.setText("Tempo ilimitado! :)");
         } else {
             timer = new Timer(1000, new ActionListener() {
-                int secondsLeft = time*60; // Defina o número inicial de segundos
+                float secondsLeft = time*60; // Defina o número inicial de segundos
     
                 @Override
                 public void actionPerformed(ActionEvent e) {

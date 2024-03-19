@@ -12,7 +12,7 @@ public class TelaCorrecao extends JFrame {
      * questionário.
      * Ela já renderiza o título do questionário , as perguntas e alternativas
      */
-    TelaCorrecao(Quiz quiz, String[] alternativasMarcadas, int quantidadeDeacertos, int time)
+    TelaCorrecao(Quiz quiz, String[] alternativasMarcadas, int quantidadeDeacertos, float time)
             throws UnsupportedEncodingException {
         setTitle(quiz.getTitle());
         setSize(800, 600);
